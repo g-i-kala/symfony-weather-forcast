@@ -1,0 +1,3 @@
+### GET request from  highlander
+GET https://localhost:8000/weather/highlander-says
+Accept: text/html 

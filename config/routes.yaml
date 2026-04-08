@@ -9,3 +9,9 @@
 
 controllers:
     resource: routing.controllers
+
+
+# weather_highlander_says:
+#     path: /weather/highlander-says
+#     controller: App\Controller\StaticController::highlanderSays
+#     methods: GET|POST
