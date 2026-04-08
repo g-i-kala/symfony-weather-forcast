@@ -8,7 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-class WeatherController extends AbstractController
+class StaticController extends AbstractController
 {
     #[Route('weatehr/highlander-says')]
     public function highlanderSays(): Response
@@ -19,5 +19,15 @@ class WeatherController extends AbstractController
         return $this->render('weather/highlander-says.html.twig', [
           'forecast' => $forecast,
         ]);
+    }
+
+    #[Route('/')]
+    public function home(): Response
+    {
+        $text = "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Natus, perferendis consectetur vero omnis temporibus enim labore distinctio magnam placeat totam explicabo et itaque consequuntur tenetur nihil! Eos alias deserunt possimus.";
+
+        return $this->render('static/home.html.twig', [
+          'text' => $text
+          ]);
     }
 }
