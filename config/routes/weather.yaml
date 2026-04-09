@@ -1,0 +1,21 @@
+
+highlander_says_api:
+    path: /highlander-says/{threshold<\d+>?50}
+    host: 'api.localhost'
+    controller: App\Controller\StaticController::highlanderSaysApi
+
+highlander_says:
+    path: /highlander-says/{threshold}
+    # path: /highlander-says/{threshold<\d+>?50}
+    controller: App\Controller\StaticController::highlanderSays
+    methods: GET|POST
+    defaults:
+        threshold: 50
+    requirements:
+        threshold: '\d+'
+
+highlander_says_guess:
+    path: /highlander-says/{guess}
+    controller: App\Controller\StaticController::highlanderSaysGuess
+    methods: GET|POST
+
