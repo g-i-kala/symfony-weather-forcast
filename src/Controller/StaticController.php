@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 //#[Route('/weatehr')]
 class StaticController extends AbstractController
@@ -20,11 +21,16 @@ class StaticController extends AbstractController
 
         $json = [
             'forecast' => $forecast,
+            'self' => $this->generateUrl(
+                'weather_highlander_says_api',
+                ['threshold' => $threshold],
+                UrlGeneratorInterface::ABSOLUTE_URL
+            ),
         ];
         return new JsonResponse($json);
     }
 
-    // #[Route('weather/highlander-says/{threshold<\d+>?50}', methods: ['GET', 'POST'])]
+    #[Route('weather/highlander-says/{threshold<\d+>?50}', methods: ['GET', 'POST'])]
     public function highlanderSays(int $threshold): Response
     {
         $draw = random_int(0, 100);

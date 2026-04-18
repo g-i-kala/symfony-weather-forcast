@@ -19,3 +19,8 @@ highlander_says_guess:
     controller: App\Controller\StaticController::highlanderSaysGuess
     methods: GET|POST
 
+weather_forecast:
+    path: /weather/{countryCode}/{city}
+    controller: App\Controller\WeatherController::forecast
+    methods: GET
+

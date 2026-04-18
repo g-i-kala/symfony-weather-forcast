@@ -22,4 +22,4 @@ info:
         route: weather_highlander_says
         permanent: false
         threshold: 1
-        path: https://google.com
+        # path: https://google.com

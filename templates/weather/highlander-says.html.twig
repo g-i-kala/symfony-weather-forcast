@@ -2,4 +2,15 @@
 {% block title %}Highlander Says{% endblock %}
 {% block body %}
 <h1>Highlander says</h1> it will be {{ forecast }}
+<br><br>
+<nav>
+  <a href="{{ path('weather_highlander_says', { threshold: 11 }) }}">Try again :)</a>
+</nav>
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script>
+  const route = "{{ url('weather_highlander_says')|escape('js') }}";
+  console.log(route);
+</script>
 {% endblock %}
