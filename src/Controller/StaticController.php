@@ -46,6 +46,11 @@ class StaticController extends AbstractController
     {
         $forecast = $guess;
 
+        $availableGuesses = ['snow', 'hail', 'rain'];
+        if (!in_array($guess, $availableGuesses)) {
+            throw $this->createNotFoundException('Not found');
+        }
+
         return $this->render('weather/highlander-says.html.twig', [
           'forecast' => $forecast,
         ]);
