@@ -1,7 +1,12 @@
 {% extends "base.html.twig" %}
 {% block title %}Highlander Says{% endblock %}
 {% block body %}
-<h1>Highlander says</h1> it will be {{ forecast }}
+<h1>Highlander says</h1> 
+{% for forecast in forecasts %}
+it will be {{ forecast }} <br>
+{% endfor %}
+
+
 <br><br>
 <nav>
   <a href="{{ path('weather_highlander_says', { threshold: 11 }) }}">Try again :)</a>

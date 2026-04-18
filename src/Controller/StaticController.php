@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -31,13 +32,19 @@ class StaticController extends AbstractController
     }
 
     #[Route('weather/highlander-says/{threshold<\d+>?50}', methods: ['GET', 'POST'])]
-    public function highlanderSays(int $threshold): Response
+    public function highlanderSays(int $threshold, Request $request): Response
     {
-        $draw = random_int(0, 100);
-        $forecast = $draw < $threshold ? 'Rain' : "Sunny";
+        $trials = $request->query->get('trials', 1);
+
+        $forecasts = [];
+        for ($i = 0; $i < $trials; $i++) {
+            $draw = random_int(0, 100);
+            $forecast = $draw < $threshold ? 'Rain' : "Sunny";
+            $forecasts[] = $forecast;
+        }
 
         return $this->render('weather/highlander-says.html.twig', [
-          'forecast' => $forecast,
+          'forecasts' => $forecasts,
         ]);
     }
 
@@ -52,7 +59,7 @@ class StaticController extends AbstractController
         }
 
         return $this->render('weather/highlander-says.html.twig', [
-          'forecast' => $forecast,
+          'forecasts' => [$forecast],
         ]);
     }
 
