@@ -9,7 +9,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -18,8 +17,13 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class StaticController extends AbstractController
 {
     // #[Route('weather/highlander-says/{threshold<\d+>?50}', methods: ['GET', 'POST'], host: 'api.localhost')]
-    public function highlanderSaysApi(#[MapQueryString] HighlanderDTO $dto): Response
+    public function highlanderSaysApi(#[MapQueryString] ?HighlanderDTO $dto): Response
     {
+        if (!$dto) {
+            $dto = new HighlanderDTO();
+            $dto->threshold = 50;
+            $dto->trials = 1;
+        };
         $forecasts = [];
         for ($i = 0; $i < $dto->trials; $i++) {
             $draw = random_int(0, 100);
