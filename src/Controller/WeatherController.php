@@ -4,18 +4,13 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Model\WeatherDummyData;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Attribute\Route;
 
 class WeatherController extends AbstractController
 {
-    // #[Route('weather/{country}/{city}', methods: ['GET'])]
-    public function forecast(string $countryCode, string $city): Response
-    {
-        $weatherDummyData = [
+    private array $weatherDummyData = [
             [
                 'city' => 'Szczecin',
                 'countryCode' => 'PL',
@@ -78,31 +73,37 @@ class WeatherController extends AbstractController
             ],
         ];
 
-        $emptyForecastData = [
-        'city' => 'Please specify a city',
-        'countryCode' => 'In a specific country',
-        'forecasts' => [
-            ['date' => 'Example data',
-            'temperature' => '23',
-            'condition' => 'Windy AF',
-            'description' => 'Cooler air with stronger wind',
-            'humidity' => 85,
-            'windSpeed' => 56,]
-        ]];
+    private array $emptyForecastData = [
+    'city' => 'Please specify a city',
+    'countryCode' => 'In a specific country',
+    'forecasts' => [
+        ['date' => 'Example data',
+        'temperature' => '23',
+        'condition' => 'Windy AF',
+        'description' => 'Cooler air with stronger wind',
+        'humidity' => 85,
+        'windSpeed' => 56,]
+    ]];
 
-        $forecastData = [];
-        if ($weatherDummyData) {
-            foreach ($weatherDummyData as $data) {
-                if (in_array($city, $data) && in_array($countryCode, $data)) {
-                    $forecastData = $data;
-                } else {
-                    $forecastData = $emptyForecastData;
-                }
-            }
-        }
+    // #[Route('weather/{country}/{city}', methods: ['GET'])]
+    public function forecast(string $countryCode, string $city): Response
+    {
+        $forecastData =  $this->matchCountryCity($countryCode, $city) ?: $this->emptyForecastData;
 
         return $this->render('weather/country-city.html.twig', [
           'forecastData' => $forecastData
         ]);
+    }
+
+    private function matchCountryCity(string $countryCode, string $city): array
+    {
+        $result = [];
+        foreach ($this->weatherDummyData as $data) {
+            if ($data['city'] === $city && $data['countryCode'] === $countryCode) {
+                $result = $data;
+                break;
+            }
+        }
+        return $result;
     }
 }
