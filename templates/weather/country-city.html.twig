@@ -1,5 +1,21 @@
 {% extends "base.html.twig" %}
 {% block title %}Forecast{% endblock %}
 {% block body %}
-<h1>{{ countryCode }}: {{ city }}</h1>
+<h1>{{ forecastData.city }}, {{ forecastData.countryCode }}</h1>
+{% for data in forecastData.forecasts %}
+<div>
+  <h2>{{ data.date }}</h2>
+  temperature
+  {{ data.temperature }}<br>
+  condition
+  {{ data.condition }}<br>
+  description
+  {{ data.description }}<br>
+  humidity
+  {{ data.humidity }}<br>
+  windSpeed
+  {{ data.windSpeed }}<br>
+</div>
+{% endfor %}
+{# <h1>{{ data.countryCode }}: {{ data.city }}</h1> #}
 {% endblock %}
