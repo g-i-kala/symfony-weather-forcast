@@ -8,8 +8,11 @@ use App\Model\HighlanderDTO;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -40,12 +43,34 @@ class StaticController extends AbstractController
                 UrlGeneratorInterface::ABSOLUTE_URL
             ),
         ];
-        return new JsonResponse($json);
+        // return new JsonResponse($json);
+        // return $this->file(
+        //     __DIR__ . '/WeatherController.php',
+        //     'kupeczka',
+        //     ResponseHeaderBag::DISPOSITION_INLINE
+        // );
+        return $this->json($json);
+
     }
 
-    #[Route('weather/highlander-says/{threshold<\d+>?50}', methods: ['GET', 'POST'])]
-    public function highlanderSays(int $threshold, Request $request): Response
-    {
+    #[Route('weather/highlander-says/{threshold<\d+>}', methods: ['GET', 'POST'])]
+    public function highlanderSays(
+        Request $request,
+        RequestStack $requestStack,
+        ?int $threshold = null
+    ): Response {
+
+        $session = $requestStack->getSession();
+        if ($threshold) {
+            $session->set('threshold', $threshold);
+            $this->addFlash(
+                'info',
+                "Threshold is set! Value: $threshold"
+            );
+        } else {
+            $threshold = $session->get('threshold', 50);
+        }
+
         $trials = $request->query->get('trials', 1);
 
         $forecasts = [];
@@ -57,6 +82,7 @@ class StaticController extends AbstractController
 
         return $this->render('weather/highlander-says.html.twig', [
           'forecasts' => $forecasts,
+          'threshold' => $threshold,
         ]);
     }
 

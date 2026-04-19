@@ -2,9 +2,14 @@
 {% block title %}Highlander Says{% endblock %}
 {% block body %}
 <h1>Highlander says</h1> 
+{% for message in app.flashes('info') %}
+<p>{{ message }}</p>
+{% endfor %}
 {% for forecast in forecasts %}
 it will be {{ forecast }} <br>
 {% endfor %}
+{% if threshold %} <p>threshold is {{ threshold }}</p>
+{% endif %}
 
 
 <br><br>
