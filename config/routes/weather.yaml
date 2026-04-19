@@ -1,7 +1,6 @@
 
 highlander_says_api:
-    path: /highlander-says/{threshold<\d+>?50}
-    host: 'api.localhost'
+    path: /highlander-says/api
     controller: App\Controller\StaticController::highlanderSaysApi
 
 highlander_says:

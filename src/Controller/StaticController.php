@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Model\HighlanderDTO;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -15,16 +18,21 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class StaticController extends AbstractController
 {
     // #[Route('weather/highlander-says/{threshold<\d+>?50}', methods: ['GET', 'POST'], host: 'api.localhost')]
-    public function highlanderSaysApi(int $threshold): Response
+    public function highlanderSaysApi(#[MapQueryString] HighlanderDTO $dto): Response
     {
-        $draw = random_int(0, 100);
-        $forecast = $draw < $threshold ? 'Rain' : "Sunny";
+        $forecasts = [];
+        for ($i = 0; $i < $dto->trials; $i++) {
+            $draw = random_int(0, 100);
+            $forecast = $draw < $dto->threshold ? 'Rain' : "Sunny";
+            $forecasts[] = $forecast;
+        }
 
         $json = [
-            'forecast' => $forecast,
+            'forecasts' => $forecasts,
+            'threshold' => $dto->threshold,
             'self' => $this->generateUrl(
                 'weather_highlander_says_api',
-                ['threshold' => $threshold],
+                ['threshold' => $dto->threshold],
                 UrlGeneratorInterface::ABSOLUTE_URL
             ),
         ];
